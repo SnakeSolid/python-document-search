@@ -1,13 +1,13 @@
 from collections import namedtuple
-from database import Database
 from flask import Flask
 from flask import render_template
 from flask import request
 from flask import send_file
 from query import answer_query
 from settings import LANGUAGES
+from storage import Database
 from storage import save
-from worker import Worker
+from storage import Worker
 import os
 import uuid
 
