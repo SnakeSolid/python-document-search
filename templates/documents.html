@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Document Search</title>
+    <link rel="icon" href="/static/icon.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css"
+      integrity="sha512-KXol4x3sVoO+8ZsWPFI/r5KBVB/ssCGB5tsv2nVOKwLg33wTFP3fmnXa47FdSVIshVTgsYk/1734xSk9aFIa4A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="/static/css/basic.css" />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/13.0.2/markdown-it.min.js"
+      integrity="sha512-ohlWmsCxOu0bph1om5eDL0jm/83eH09fvqLDhiEdiqfDeJbEvz4FSbeY0gLJSVJwQAp0laRhTXbUQG+ZUuifUQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.37/vue.global.prod.min.js"
+      integrity="sha512-Jy6m521ZXSctbCzOqSjmoqsl2sNKLWdKMKBMKdFs4LLZCyjtcEq/TarvtaGjOddGm5lWFvd7IYN7LFMLeuqaug=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="/static/js/documents.js" defer="defer"></script>
+  </head>
+  <body id="app">
+    <div class="ui fixed inverted menu">
+      <div class="ui container">
+        <a href="#" class="header item"
+          ><img class="logo" src="/static/icon.png" />Document Search</a
+        >
+        <a href="/search" class="item">Search</a>
+        <a href="/documents" class="active item">Documents</a>
+      </div>
+    </div>
+
+    <div class="ui main internally celled grid container">
+      <div class="column">
+        <div class="ui secondary pointing menu">
+          <a
+            class="item"
+            :class="{ active: showUploadPage() }"
+            v-on:click="setUploadPage"
+            >Upload File</a
+          >
+          <a
+            class="item"
+            :class="{ active: showAddUrlPage() }"
+            v-on:click="setAddUrlPage"
+            >Add URL</a
+          >
+        </div>
+
+        <div class="ui form" v-show="showUploadPage()">
+          <div class="field">
+            <div class="ui action input">
+              <input type="text" readonly="readonly" :value="fileName()" />
+
+              <label for="file" class="ui icon button">
+                <i class="paperclip basic icon"></i>
+                <input
+                  type="file"
+                  id="file"
+                  name="file"
+                  v-on:change="fileChange"
+                  style="display: none"
+                />
+              </label>
+
+              <button
+                class="ui primary button"
+                :class="{ disabled: fileEmpty() }"
+                v-on:click="uploadFile"
+              >
+                Upload
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="ui form" v-show="showAddUrlPage()">
+          <div class="field" :class="{ error: !urlValid() }">
+            <div class="ui action input">
+              <input type="text" v-model="selectedUrl" />
+
+              <button
+                class="ui primary button"
+                :class="{ disabled: !urlValid() }"
+                v-on:click="addUrl"
+              >
+                Add URL
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <table class="ui compact striped table">
+          <thead>
+            <tr>
+              <th class="fourteen wide">Document</th>
+              <th class="two wide">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="document in documents">
+              <td>
+                <a :href="documentLink(document)" target="_blank">
+                  <i class="black icon" :class="documentClass(document)"></i>
+                  <span v-text="document.filename"></span>
+                </a>
+              </td>
+              <td>
+                <button
+                  class="fluid negative ui icon button"
+                  v-on:click="removeDocument(document)"
+                >
+                  <i class="times circle icon"></i>
+                  Remove
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

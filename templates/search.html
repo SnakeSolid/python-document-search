@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Document Search</title>
+    <link rel="icon" href="/static/icon.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css"
+      integrity="sha512-KXol4x3sVoO+8ZsWPFI/r5KBVB/ssCGB5tsv2nVOKwLg33wTFP3fmnXa47FdSVIshVTgsYk/1734xSk9aFIa4A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="/static/css/basic.css" />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/13.0.2/markdown-it.min.js"
+      integrity="sha512-ohlWmsCxOu0bph1om5eDL0jm/83eH09fvqLDhiEdiqfDeJbEvz4FSbeY0gLJSVJwQAp0laRhTXbUQG+ZUuifUQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.37/vue.global.prod.min.js"
+      integrity="sha512-Jy6m521ZXSctbCzOqSjmoqsl2sNKLWdKMKBMKdFs4LLZCyjtcEq/TarvtaGjOddGm5lWFvd7IYN7LFMLeuqaug=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="/static/js/search.js" defer="defer"></script>
+  </head>
+  <body id="app">
+    <div class="ui fixed inverted menu">
+      <div class="ui container">
+        <a href="#" class="header item"
+          ><img class="logo" src="/static/icon.png" />Document Search</a
+        >
+        <a href="/search" class="active item">Search</a>
+        <a href="/documents" class="item">Documents</a>
+      </div>
+    </div>
+
+    <div class="ui main internally celled grid container">
+      <div class="row">
+        <div class="column">
+          <div class="ui fluid action input">
+            <input
+              type="text"
+              placeholder="Search..."
+              :class="{ disabled: loading }"
+              v-model="query"
+            />
+
+            <select
+              class="ui compact selection dropdown"
+              :class="{ disabled: loading }"
+              v-model="selectedLanguage"
+            >
+              <option disabled value="">Language</option>
+              <option
+                v-for="langauge in languages"
+                :value="langauge"
+                v-text="langauge"
+              ></option>
+            </select>
+
+            <div
+              class="ui primary button"
+              :class="{ disabled: queryEmpty() || loading }"
+              v-on:click="search"
+            >
+              Search
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" v-if="showResult()">
+        <div class="column" :class="{ 'ten wide': showImages() }">
+          <h3 class="ui header" v-text="resultQuery"></h3>
+          <div v-html="resultHtml()"></div>
+          <h3 class="ui header" v-if="showDocuments()">Sources</h3>
+
+          <ol class="ui list" v-if="showDocuments()">
+            <li
+              class="item"
+              v-for="(document, index) in resultDocuments"
+              :id="documentId(document)"
+            >
+              <a
+                target="_blank"
+                :href="documentLink(document)"
+                v-text="document.name"
+              ></a>
+            </li>
+          </ol>
+        </div>
+        <div class="six wide column" v-if="showImages()">
+          <h1 class="ui header">Images Found</h1>
+
+          <div class="ui tiny rounded images">
+            <a
+              target="_blank"
+              v-for="(image, index) in resultImages"
+              :href="documentLink(image)"
+            >
+              <img
+                class="ui image"
+                v-bind:src="documentLink(image)"
+                :id="documentId(image)"
+              />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
