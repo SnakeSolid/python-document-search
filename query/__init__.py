@@ -1,6 +1,7 @@
+from collections import namedtuple
+from convert import translate
 from ollama import Message
 from settings import MODEL_EMBEDDING
-from collections import namedtuple
 import ollama
 import re
 
@@ -71,7 +72,8 @@ def _source_name(document):
 
 
 def answer_query(database, query, language="English", n=20):
-    embedding = _query_embedding(query)
+    translated = translate(query)
+    embedding = _query_embedding(translated.result)
     results = database.query(embedding, n)
     sources = "\n".join((_format_sourse(index, result["text"])
                          for index, result in enumerate(results)))

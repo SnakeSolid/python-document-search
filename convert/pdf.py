@@ -8,11 +8,11 @@ from settings import MODEL_IMAGE
 import ollama
 
 FIX_TEXT_PROMPT = """
-Fix this text. Keep language and style, change only format and fix syntax errors. Do not write any introduction and conclusion.
-
 ```
 {text}
 ```
+
+Fix this text. Keep language and style, change only format and fix syntax errors. Do not write any introduction and conclusion.
 """
 
 PageLines = namedtuple("PageLines", ["index", "lines"])
