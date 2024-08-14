@@ -102,7 +102,7 @@ const application = Vue.createApp({
             this.resultImages = data.result.images;
           } else {
             this.resultQuery = "No results";
-            this.resultText = [];
+            this.resultText = "";
             this.resultDocuments = [];
             this.resultImages = [];
           }
