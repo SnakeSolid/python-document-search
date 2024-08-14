@@ -3,6 +3,8 @@
 Simple implementation of local semantic search based on
 [ChromaDB](https://docs.trychroma.com/) and [Ollama](https://ollama.com/).
 
+![Document Search](images/document-search.png "Document Search")
+
 ## Installation
 
 This project use [Ollama](https://ollama.com/). So you must install it before
